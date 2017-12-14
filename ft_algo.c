@@ -1,33 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_algo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bgeorges <bgeorges@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 18:03:35 by spopieul          #+#    #+#             */
-/*   Updated: 2017/12/12 19:37:34 by spopieul         ###   ########.fr       */
+/*   Updated: 2017/12/14 19:56:09 by bgeorges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
-ca => dans le .h
-
-typedef struct	s_tetrimino
-{
-	unsigned long	lines[4];
-	int				width;
-	int				height;
-	int				x;
-	int				y;
-}	t_tetrimino;
-
-typedef struct	s_map
-{
-	unsigned long	*lines;
-	size_t			size;
-}	t_map;
-*/
+#include "fillit.h"
 
 int			get_tetrimino_height(t_tetrimino *tetrimino)
 {

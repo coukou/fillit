@@ -1,20 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fillit.c                                           :+:      :+:    :+:   */
+/*   ft_parsing.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bgeorges <bgeorges@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:56:33 by bgeorges          #+#    #+#             */
-/*   Updated: 2017/12/13 11:12:09 by bgeorges         ###   ########.fr       */
+/*   Updated: 2017/12/14 19:44:43 by bgeorges         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <fcntl.h>
 #include "libft.h"
-#include <stdio.h>
-#define BUFF_SIZE 4096
 
 unsigned short	ft_convert(char *tetriminos)
 {
@@ -63,15 +59,26 @@ int				ft_is_valid_tetriminos(char *tetriminos)
 	return (1);
 }
 
+void			ft_get_next_tetriminos
+	(char *tmp, char *buf, unsigned short *tetriminos, int nb_tetriminos)
+{
+	{
+		if (!ft_is_valid_tetriminos(tmp))
+			ft_error();
+		tetriminos[nb_tetriminos++] = ft_convert(tmp);
+		buf++;
+	}
+}
+
 void			ft_get_tetriminos(char *buf, unsigned short *tetriminos)
 {
 	int				i;
 	int				j;
-	int				nb_tetriminos;
 	char			tmp[16];
+	int				nb_tetriminos;
 
 	i = 0;
-	nb_tetriminos = 1;
+	nb_tetriminos = 0;
 	while (*buf != '\0')
 	{
 		j = 0;
@@ -85,46 +92,18 @@ void			ft_get_tetriminos(char *buf, unsigned short *tetriminos)
 		if (i == 16)
 		{
 			tmp[i] = '\0';
-			if (!ft_is_valid_tetriminos(tmp))
-				ft_error();
-			tetriminos[nb_tetriminos++] = ft_convert(tmp);
-			buf++;
+			ft_get_next_tetriminos(tmp, buf, tetriminos, nb_tetriminos);
 			i = 0;
 		}
-		if (*buf != '\n' && *buf != '\0')
+		if ((*buf != '\n' && *buf != '\0') || (nb_tetriminos > 26))
 			ft_error();
 		else
 			buf++;
 	}
-	if (nb_tetriminos < 4 || nb_tetriminos > 27)
-		ft_error();
+	tetriminos[nb_tetriminos] = 0;
 }
 
-void			ft_parse(int ac, char **av)
+int	main(void)
 {
-	char			buf[BUFF_SIZE + 1];
-	int				fd;
-	int				ret;
-	unsigned short	tetriminos[26];
-
-	if (ac != 2)
-	{
-		ft_putendl("usage: ./fillit tetriminos_list_file");
-		exit(EXIT_FAILURE);
-	}
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		ft_error();
-	ret = read(fd, buf, BUFF_SIZE);
-	buf[ret] = '\0';
-	if ((buf[ret - 2] == '#' || buf[ret - 2] == '.') && buf[ret - 1] == '\n')
-		ft_get_tetriminos(buf, tetriminos);
-	else
-		ft_error();
-}
-
-int				main(int ac, char **av)
-{
-	ft_parse(ac, av);
 	return (0);
 }
