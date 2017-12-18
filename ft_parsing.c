@@ -6,13 +6,11 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:56:33 by bgeorges          #+#    #+#             */
-/*   Updated: 2017/12/18 20:36:08 by spopieul         ###   ########.fr       */
+/*   Updated: 2017/12/18 22:40:24 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#define BUFF_SIZE 4096
-#include <fcntl.h>
+#include "fillit.h"
 
 unsigned short	ft_convert(char *tetriminos)
 {
@@ -28,12 +26,6 @@ unsigned short	ft_convert(char *tetriminos)
 		i--;
 	}
 	return (tetriminos_converted);
-}
-
-void			ft_error(void)
-{
-	ft_putendl("error");
-	exit(EXIT_FAILURE);
 }
 
 int				ft_horizontal_sum(char *tetriminos, int i)

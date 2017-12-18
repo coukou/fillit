@@ -3,77 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_algo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgeorges <bgeorges@student.42.fr>          +#+  +:+       +#+        */
+/*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 18:03:35 by spopieul          #+#    #+#             */
-/*   Updated: 2017/12/14 19:56:09 by bgeorges         ###   ########.fr       */
+/*   Updated: 2017/12/18 22:38:42 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int			get_tetrimino_height(t_tetrimino *tetrimino)
-{
-	int i;
-	int height;
-
-	i = -1;
-	height = 0;
-	while (++i < 4)
-	{
-		if (tetrimino->lines[i] > 0)
-			height++;
-	}
-	return (height);
-}
-
-size_t			get_tetrimino_width(t_tetrimino *tetrimino)
-{
-	int i;
-	int j;
-	int width;
-
-	i = -1;
-	width = 0;
-	while (++i < 4)
-	{
-		j = 0;
-		while ((tetrimino->lines[i] >> j) & 1 && j < 4)
-			j++;
-		if (j > width)
-			width = j;
-	}
-	return (width);
-}
-
-t_tetrimino		*reset_tetrimino(t_tetrimino *tetrimino)
-{
-	tetrimino->x = 0;
-	tetrimino->y = 0;
-	return (tetrimino);
-}
-
-t_tetrimino		*init_tetrimino(t_tetrimino *tetrimino, unsigned long data)
-{
-	int i;
-
-	i = -1;
-	while (++i < 4)
-		tetrimino->lines[i] = (data >> (i * 4)) & 0xf;
-	while (!(tetrimino->lines[0] & 1) && !(tetrimino->lines[1] & 1)
-			&& !(tetrimino->lines[2] & 1) && !(tetrimino->lines[3] & 1))
-	{
-		i = -1;
-		while (++i < 4)
-			tetrimino->lines[i] = tetrimino->lines[i] >> 1;
-	}
-	tetrimino->width = get_tetrimino_width(tetrimino);
-	tetrimino->height = get_tetrimino_height(tetrimino);
-	reset_tetrimino(tetrimino);
-	return (tetrimino);
-}
-
-int		insert_tetrimino(t_map *map, t_tetrimino *tetrimino)
+void	ft_insert_tetrimino(t_map *map, t_tetrimino *tetrimino)
 {
 	int i;
 	unsigned long tetri_line;
@@ -84,32 +23,30 @@ int		insert_tetrimino(t_map *map, t_tetrimino *tetrimino)
 	{
 		tetri_line = (tetrimino->lines[i] << tetrimino->x);
 		map_line = map->lines[tetrimino->y + i];
-		if ((map_line + tetri_line) > (map_line ^ tetri_line))
-			return (0);
 		map->lines[tetrimino->y + i] = (map_line ^ tetri_line);
 	}
-
-	return (1);
 }
 
-int		resolve(t_map *map, t_tetrimino *tetriminos, int i)
+int		ft_resolve(t_map *map, t_tetrimino *tetriminos, int i)
 {
 	t_tetrimino *t;
+	int res = 50;
 
 	t = &tetriminos[i];
-	if (t->width == 0 || t->height == 0 || i == 26)
+	if (t->lines[0] == 0 || i == 26)
 		return (1);
-	reset_tetrimino(t);
+	ft_reset_tetrimino(t);
 	while (t->y + t->height <= map->size)
 	{
 		t->x = 0;
 		while (t->x + t->width <= map->size)
 		{
-			if (insert_tetrimino(map, t))
+			if (ft_can_insert_tetrimino(map, t))
 			{
-				if (resolve(map, tetriminos, i + 1))
+				ft_insert_tetrimino(map, t);
+				if (ft_resolve(map, tetriminos, i + 1))
 					return (1);
-				insert_tetrimino(map, t);
+				ft_insert_tetrimino(map, t);
 			}
 			t->x++;
 		}
@@ -118,7 +55,8 @@ int		resolve(t_map *map, t_tetrimino *tetriminos, int i)
 	return (0);
 }
 
-void	print_map(t_map *map, t_tetrimino *tetriminos)
+// ca faut lui casser sa mere en 2
+void	ft_print_map(t_map *map, t_tetrimino *tetriminos)
 {
 	int i;
 	int x;
@@ -135,7 +73,7 @@ void	print_map(t_map *map, t_tetrimino *tetriminos)
 		char_map[y][x] = '\0';
 	}
 	i = -1;
-	while ((t = &tetriminos[++i])->width && i < 26)
+	while ((t = &tetriminos[++i]) && t->lines[0] != 0 && i < 26)
 	{
 		y = -1;
 		while (++y < 4)
@@ -150,19 +88,33 @@ void	print_map(t_map *map, t_tetrimino *tetriminos)
 	}
 	i = -1;
 	while (++i < map->size)
-		printf("%s\n", char_map[i]);
+		ft_putendl(char_map[i]);
 }
 
-void	start_resolve(t_tetrimino *tetriminos, size_t map_size)
+void	ft_start_resolve(t_tetrimino *tetriminos, size_t map_size)
 {
 	t_map map;
+	int i;
 	unsigned long lines[map_size];
 
 	map.lines = lines;
 	map.size = map_size;
-	while (map_size)
-		map.lines[--map_size] = 0;
-	if (!resolve(&map, tetriminos, 0))
-		return start_resolve(tetriminos, map.size + 1);
-	print_map(&map, tetriminos);
+	i = -1;
+	while (++i < map_size)
+		map.lines[i] = 0;
+	if (!ft_resolve(&map, tetriminos, 0))
+		return ft_start_resolve(tetriminos, map.size + 1);
+	ft_print_map(&map, tetriminos);
+}
+
+void	ft_bootstrap_resolve(unsigned short *tetriminos_tmp)
+{
+	int i;
+	t_tetrimino tetriminos[26];
+
+	i = -1;
+	while (tetriminos_tmp[++i])
+		ft_init_tetrimino(&tetriminos[i], tetriminos_tmp[i]);
+	tetriminos[i].lines[0] = 0;
+	ft_start_resolve(tetriminos, 2);
 }

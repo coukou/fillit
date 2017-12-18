@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   fillit.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bgeorges <bgeorges@student.42.fr>          +#+  +:+       +#+        */
+/*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/14 18:04:15 by bgeorges          #+#    #+#             */
-/*   Updated: 2017/12/14 19:56:00 by bgeorges         ###   ########.fr       */
+/*   Updated: 2017/12/18 22:39:41 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef FILLIT_H
+# define FILLIT_H
 
-
-#include "Libft/libft.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -34,5 +34,17 @@ typedef struct	s_map
 	size_t			size;
 }	t_map;
 
-void    ft_get_tetriminos(buf, tetriminos);
+void    ft_get_tetriminos(char *buf, unsigned short *tetriminos);
 void    ft_error();
+void	ft_start_resolve(unsigned short *tetriminos_tmp);
+
+/*
+	a ajouter
+
+	ft_reset_tetrimino
+	ft_can_insert_tetrimino
+	ft_init_tetrimino
+	ft_putendl
+*/
+
+#endif
