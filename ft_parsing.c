@@ -6,19 +6,19 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:56:33 by bgeorges          #+#    #+#             */
-/*   Updated: 2017/12/18 22:40:24 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/09 17:20:14 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-unsigned short	ft_convert(char *tetriminos)
+unsigned short		ft_convert(char *tetriminos)
 {
 	int				i;
 	unsigned short	tetriminos_converted;
 
 	i = 15;
-	while (tetriminos[i] != '\0')
+	while (i >= 0)
 	{
 		tetriminos_converted = tetriminos_converted << 1;
 		if (tetriminos[i] == '#')
@@ -28,91 +28,61 @@ unsigned short	ft_convert(char *tetriminos)
 	return (tetriminos_converted);
 }
 
-int				ft_horizontal_sum(char *tetriminos, int i)
+unsigned short		ft_create_tetrimino(char *tmp, int hash_count)
 {
-	int right;
-	int left;
-
-	right = (i + 1) <= 16 ? tetriminos[i + 1] == '#' : 0;
-	left = (i - 1) >= 0 ? tetriminos[i - 1] == '#' : 0;
-	return (right + left);
+	if (hash_count != 4)
+		ft_error();
+	if (!ft_is_valid_tetriminos(tmp))
+		ft_error();
+	return (ft_convert(tmp));
 }
 
-int				ft_vertical_sum(char *tetriminos, int i)
+int					ft_get_line(char *buf, char (*line)[])
 {
-	int top;
-	int bottom;
-
-	top = (i - 4) >= 0 ? tetriminos[i - 4] == '#' : 0;
-	bottom = (i + 4) <= 16 ? tetriminos[i + 4] == '#' : 0;
-	return (top + bottom);
-}
-
-int				ft_is_valid_tetriminos(char *tetriminos)
-{
-	int		i;
-	int		hash_count;
-	int		sum;
+	int i;
 
 	i = 0;
-	hash_count = 0;
-	sum = 0;
-	while (tetriminos[i] != '\0')
+	while (buf[i])
 	{
-		if (tetriminos[i] == '#')
-		{
-			sum += ft_vertical_sum(tetriminos, i);
-			sum += ft_horizontal_sum(tetriminos, i);
-		}
+		if (buf[i] == '\n')
+			return (1);
+		(*line)[i] = buf[i];
 		i++;
 	}
-	return (sum >= 6);
+	return (0);
 }
 
-void			ft_get_tetriminos(char *buf, unsigned short *tetriminos)
+unsigned short		ft_parse_tetrimino(char *tmp)
 {
-	int				i;
-	int				j;
-	char			tmp[17];
-	int				nb_tetriminos;
-	int				hash_count;
+	if (!ft_is_valid_tetriminos(tmp))
+		ft_error();
+	return (ft_convert(tmp));
+}
+
+void				ft_get_tetriminos(char *buf, unsigned short *tetriminos)
+{
+	char	line[4096];
+	char	tmp[16];
+	int		i;
+	int		nb_tetriminos;
 
 	i = 0;
 	nb_tetriminos = 0;
-	hash_count = 0;
-	while (*buf != '\0')
+	while (ft_get_line(buf, &line))
 	{
-		j = 0;
-		while (*buf && (*buf == '.' || *buf == '#') && j < 4)
-		{
-			if (*buf == '#')
-				hash_count++;
-			tmp[i++] = *buf++;
-			j++;
-		}
-		if (*buf != '\n')
+		if (i != 4 && !ft_check_line(line))
 			ft_error();
-		if (i == 16)
+		if (i != 4)
+			strncpy(&tmp[(i++) * 4], line, 4);
+		else
 		{
-			if (hash_count != 4)
-				ft_error();
-			if (!ft_is_valid_tetriminos(tmp))
-				ft_error();
-			hash_count = 0;
-			tmp[i] = '\0';
-			tetriminos[nb_tetriminos++] = ft_convert(tmp);
-			if (*buf == '\n')
-				buf++;
+			tetriminos[nb_tetriminos++] = ft_parse_tetrimino(tmp);
 			i = 0;
 		}
-		if (*buf != '\n' && *buf != '\0')
-			ft_error();
-		else
-			buf++;
-		if (*buf == '\n')
-			ft_error();
+		buf += ft_strlen(line) + 1;
+		bzero(&line, 4096);
 	}
-	if (i != 0)
+	if (i != 4)
 		ft_error();
-	tetriminos[nb_tetriminos] = 0;
+	tetriminos[nb_tetriminos++] = ft_parse_tetrimino(tmp);
 }

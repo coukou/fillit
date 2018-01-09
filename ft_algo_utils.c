@@ -6,13 +6,13 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/18 22:31:05 by spopieul          #+#    #+#             */
-/*   Updated: 2017/12/18 22:41:53 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/09 17:20:29 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int			ft_get_tetrimino_height(t_tetrimino *tetrimino)
+int				ft_get_tetrimino_height(t_tetrimino *tetrimino)
 {
 	int i;
 	int height;
@@ -83,11 +83,11 @@ t_tetrimino		*ft_init_tetrimino(t_tetrimino *tetrimino, unsigned long data)
 	return (tetrimino);
 }
 
-int		ft_can_insert_tetrimino(t_map *map, t_tetrimino *tetrimino)
+int				ft_can_insert_tetrimino(t_map *map, t_tetrimino *tetrimino)
 {
-	int i;
-	unsigned long tetri_line;
-	unsigned long map_line;
+	int				i;
+	unsigned long	tetri_line;
+	unsigned long	map_line;
 
 	i = -1;
 	while (++i < 4)
