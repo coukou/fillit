@@ -6,7 +6,7 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/09 15:15:22 by spopieul          #+#    #+#             */
-/*   Updated: 2018/01/09 16:58:21 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/10 13:23:24 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 	{
-		ft_putendl("usage: ./fillit tetriminos_list_file");
+		ft_putendl("usage: ./fillit tetriminos_description_file");
 		exit(EXIT_FAILURE);
 	}
 	fd = open(av[1], O_RDONLY);

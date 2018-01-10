@@ -6,7 +6,7 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/18 22:31:05 by spopieul          #+#    #+#             */
-/*   Updated: 2018/01/09 17:20:29 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/10 16:01:11 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,6 @@ size_t			ft_get_tetrimino_width(t_tetrimino *tetrimino)
 	return (width);
 }
 
-t_tetrimino		*ft_reset_tetrimino(t_tetrimino *tetrimino)
-{
-	tetrimino->x = 0;
-	tetrimino->y = 0;
-	return (tetrimino);
-}
-
 t_tetrimino		*ft_init_tetrimino(t_tetrimino *tetrimino, unsigned long data)
 {
 	int i;
@@ -79,7 +72,8 @@ t_tetrimino		*ft_init_tetrimino(t_tetrimino *tetrimino, unsigned long data)
 	}
 	tetrimino->width = ft_get_tetrimino_width(tetrimino);
 	tetrimino->height = ft_get_tetrimino_height(tetrimino);
-	ft_reset_tetrimino(tetrimino);
+	tetrimino->x = 0;
+	tetrimino->y = 0;
 	return (tetrimino);
 }
 

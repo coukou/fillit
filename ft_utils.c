@@ -6,7 +6,7 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/18 22:23:06 by spopieul          #+#    #+#             */
-/*   Updated: 2018/01/09 16:14:42 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/10 13:17:34 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,27 @@ int		ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
+}
+
+void	ft_bzero(void *addr, size_t size)
+{
+	while (size--)
+		*(unsigned char*)addr++ = 0;
+}
+
+char	*ft_strncpy(char *dest, const char *src, size_t len)
+{
+	size_t i;
+
+	i = 0;
+	while (src[i] && i < len)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < len)
+		dest[i++] = '\0';
+	return (dest);
 }
 
 void	ft_putendl(char *str)

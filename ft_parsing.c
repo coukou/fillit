@@ -6,7 +6,7 @@
 /*   By: spopieul <spopieul@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/30 16:56:33 by bgeorges          #+#    #+#             */
-/*   Updated: 2018/01/09 17:20:14 by spopieul         ###   ########.fr       */
+/*   Updated: 2018/01/10 14:20:17 by spopieul         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,25 +62,26 @@ unsigned short		ft_parse_tetrimino(char *tmp)
 void				ft_get_tetriminos(char *buf, unsigned short *tetriminos)
 {
 	char	line[4096];
-	char	tmp[16];
+	char	tmp[17];
 	int		i;
 	int		nb_tetriminos;
 
 	i = 0;
 	nb_tetriminos = 0;
+	tmp[16] = 0;
 	while (ft_get_line(buf, &line))
 	{
-		if (i != 4 && !ft_check_line(line))
+		if ((i != 4 && !ft_check_line(line)) || (i == 4 && *line != '\0'))
 			ft_error();
 		if (i != 4)
-			strncpy(&tmp[(i++) * 4], line, 4);
+			ft_strncpy(&tmp[(i++) * 4], line, 4);
 		else
 		{
 			tetriminos[nb_tetriminos++] = ft_parse_tetrimino(tmp);
 			i = 0;
 		}
 		buf += ft_strlen(line) + 1;
-		bzero(&line, 4096);
+		ft_bzero(&line, 4096);
 	}
 	if (i != 4)
 		ft_error();
